@@ -9,7 +9,6 @@ root_dir = os.path.dirname(os.path.abspath(__file__))
 models_path = os.path.join(root_dir, 'models')
 
 
-# Example: Adding a custom activation function
 def custom_activation(x):
     return x
 
@@ -25,7 +24,7 @@ def preprocess_image(uploaded_image, img_dims):
     image = image.resize((img_dims, img_dims))  # Resize to img_dims x img_dims
     image = np.array(image)  # Convert to NumPy array
 
-    # Ensure the image has 3 channels (RGB)
+    #  3 channels (RGB)
     if image.ndim == 2:  # Grayscale image
         image = np.dstack([image, image, image])  # Convert to 3 channels
 
@@ -33,13 +32,14 @@ def preprocess_image(uploaded_image, img_dims):
     image = image.astype('float32') / 255.0
 
     # Add batch dimension
-    image = np.expand_dims(image, axis=0)  #Shape becomes (1, img_dims, img_dims, 3)
+    image = np.expand_dims(image, axis=0)  #Shape (1, img_dims, img_dims, 3)
 
     return image
 
-# Streamlit app
+# app
 st.title("Pneumonia Detection")
 st.write("Upload a chest X-ray image to detect if it's Normal or Pneumonia.")
+st.write("Model trained using CNN architecture on chest X-ray data.")
 
 uploaded_file = st.file_uploader("Upload a Chest X-Ray Image", type=["jpg", "png", "jpeg"])
 
@@ -54,7 +54,7 @@ if uploaded_file is not None:
     if st.button("Predict"):
         # Prediction
         prediction = model.predict(processed_image)
-        st.write("Prediction Probability: {:.2f}%".format(prediction[0][0] * 100))
+        st.write("Prediction Probability for Pneumonia: {:.2f}%".format(prediction[0][0] * 100))
 
         # Display result
         if prediction[0][0] > 0.5:
@@ -62,5 +62,3 @@ if uploaded_file is not None:
         else:
             st.write("The X-ray indicates **Normal**.")
 
-# footer
-st.write("Model trained using CNN architecture on chest X-ray data.")
